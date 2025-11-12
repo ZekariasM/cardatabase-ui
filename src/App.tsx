@@ -51,12 +51,23 @@ export default function App() {
     {repodata.length === 0 ? (
       <p>No data available</p>
     ):(
-      <table>
+      <table className="repo-table">
+        <thead>
+          <tr>
+            <th>Number</th>
+            <th>Name</th>
+            <th>URL</th>
+          </tr>
+        </thead>
         <tbody>
-          {repodata.map(repo => (
+          {repodata.map((repo, index) => (
             <tr key={repo.id}>
+              <td>{index + 1}</td>
+              <td>{repo.full_name}</td>
               <td>
-                <a href={repo.html_url}>{repo.html_url}</a>
+                <a href={repo.html_url} target="_blank" rel="noopener noreferrer">
+                  {repo.html_url}
+                </a>
               </td>
             </tr>
           ))}

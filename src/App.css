@@ -40,3 +40,77 @@
 .read-the-docs {
   color: #888;
 }
+
+/* Repository Table Styling */
+.repo-table {
+  width: 100%;
+  margin-top: 2rem;
+  border-collapse: collapse;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.repo-table thead {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.repo-table th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.875rem;
+}
+
+.repo-table th:first-child {
+  width: 80px;
+  text-align: center;
+}
+
+.repo-table th:nth-child(2) {
+  width: 35%;
+}
+
+.repo-table tbody tr {
+  border-bottom: 1px solid #e5e7eb;
+  transition: background-color 0.2s ease;
+}
+
+.repo-table tbody tr:hover {
+  background-color: #f3f4f6;
+}
+
+.repo-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.repo-table td {
+  padding: 1rem;
+  text-align: left;
+}
+
+.repo-table td:first-child {
+  text-align: center;
+  font-weight: 600;
+  color: #667eea;
+}
+
+.repo-table td:nth-child(2) {
+  font-weight: 500;
+  color: #374151;
+}
+
+.repo-table a {
+  color: #2563eb;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  word-break: break-all;
+}
+
+.repo-table a:hover {
+  color: #1d4ed8;
+  text-decoration: underline;
+}
