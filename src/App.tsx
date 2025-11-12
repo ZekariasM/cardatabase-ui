@@ -1,35 +1,68 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useEffect, useState } from 'react'
 import './App.css'
+import axios from 'axios';
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  const [keyword, setKeyword] = useState('');
+  const [repodata, setRepodata] = useState<Repository[]>([]);
+  const [weather , setWeather] = useState({
+    temp: '',
+    desc: '',
+    icon: ''
+  });
+
+  useEffect(() => {
+    fetch('https://api.openweathermap.org/data/2.5/weather?q=London&units=Metric&APIkey=bbfdcce6346a3fc4488a79aafd43feb1')
+    .then(respnse => respnse.json())
+    .then(result => {
+      setWeather({
+        temp: result.main.temp,
+        desc: result.weather[0].main,
+        icon: result.weather[0].icon
+      });
+    })
+    .catch(err => console.error(err))
+  }, [])
+
+  type Repository = {
+    id: number;
+    full_name: string;
+    html_url: string;
+  }
+
+  const handleClick = () => {
+    //Rest API Call
+    axios.get<{items: Repository[]}>(`https://api.github.com/search/repositories?q=${keyword}`)
+    .then(response => setRepodata(response.data.items))
+    .catch(err => console.error(err))
+  }
+
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+    <h1>Weather App</h1>
+    <p>Temprature: {weather.temp} C</p>
+    <p>Description: {weather.desc}</p>
+    <img src={`http://openweathermap.org/img/wn/${weather.icon}@2x.png`} alt='Weather icon' />
+    <h4>*********************************************************</h4>
+    <br />
+    <input value={keyword} onChange={e => setKeyword(e.target.value)} />
+    <button onClick={handleClick}>Fetch</button>
+    {repodata.length === 0 ? (
+      <p>No data available</p>
+    ):(
+      <table>
+        <tbody>
+          {repodata.map(repo => (
+            <tr key={repo.id}>
+              <td>
+                <a href={repo.html_url}>{repo.html_url}</a>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    )}
     </>
   )
 }
-
-export default App
