@@ -4,6 +4,7 @@ import type { GridCellParams, GridColDef } from '@mui/x-data-grid';
 import  { DataGrid } from '@mui/x-data-grid';
 import Snackbar from "@mui/material/Snackbar";
 import { useState } from "react";
+import AddCar from "./AddCar";
 
 export default function Carlist() {
     const [open, setOpen] = useState(false);
@@ -59,7 +60,8 @@ export default function Carlist() {
     } else {
         return (
             <>
-               <DataGrid
+            <AddCar />
+            <DataGrid
             rows={data}
             columns={columns}
             disableRowSelectionOnClick={true}
