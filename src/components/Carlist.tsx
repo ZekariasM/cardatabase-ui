@@ -1,17 +1,56 @@
-import { useQuery } from "@tanstack/react-query";
-import type { CarResponse } from "../types"
-import axios from "axios"
+import { useQuery, useMutation, useQueryClient} from "@tanstack/react-query";
+import { deleteCar, getCars } from "../api/carapi";
+import type { GridCellParams, GridColDef } from '@mui/x-data-grid';
+import  { DataGrid } from '@mui/x-data-grid';
+import Snackbar from "@mui/material/Snackbar";
+import { useState } from "react";
 
 export default function Carlist() {
-    const getCars = async(): Promise<CarResponse[]> => {
-        const response = await axios.get("http://localhost:8080/api/cars");
-        return response.data._embedded.cars;
-    }
-    
+    const [open, setOpen] = useState(false);
+    const queryClient = useQueryClient();
+
     const {data, error, isSuccess} = useQuery({
         queryKey: ["cars"],
         queryFn: getCars
     });
+
+    const { mutate } = useMutation({
+        mutationFn: deleteCar,
+        onSuccess: () => {
+            setOpen(true);
+            queryClient.invalidateQueries({queryKey: ['cars']})
+        },
+        onError: (err: Error) => {
+            console.error(err);
+        }
+    })
+
+    const columns: GridColDef[] = [
+        {field: 'brand', headerName: 'Brand', width: 100},
+        {field: 'model', headerName: 'Model', width: 100},
+        {field: 'color', headerName: 'Color', width: 100},
+        {field: 'registrationNumber', headerName: 'Reg.nr.', width: 100},
+        {field: 'modelYear', headerName: 'Model Year', width: 100},
+        {field: 'price', headerName: 'Price', width: 100},
+        {
+            field: 'delete',
+            headerName: '',
+            width: 90,
+            sortable: false,
+            filterable: false,
+            disableColumnMenu: true,
+            renderCell: (params: GridCellParams) => (
+                <button
+                onClick={() => {
+                    if (window.confirm(`Are you sure you want to delete ${params.row.brand} ${params.row.model}?`)) {
+                        mutate(params.row._links.car.href);
+                    }
+                }}>
+                    Delete
+                </button>
+            )
+        }
+    ]
 
     if (!isSuccess) {
         return <span>Loading...</span>
@@ -19,23 +58,21 @@ export default function Carlist() {
         return <span>Error when fetching data....</span>
     } else {
         return (
-            <table>
-                <tbody>
-                    {
-                        data.map((car: CarResponse) =>
-                            <tr key={car._links.self.href}>
-                                <td>{car.brand}</td>
-                                <td>{car.model}</td>
-                                <td>{car.color}</td>
-                                <td>{car.registrationNumber}</td>
-                                <td>{car.modelYear}</td>
-                                <td>{car.price}</td>
-                                <td></td>
-                            </tr>
-                        )
-                    }
-                </tbody>
-            </table>
+            <>
+               <DataGrid
+            rows={data}
+            columns={columns}
+            disableRowSelectionOnClick={true}
+            getRowId={row => row._links.self.href} />
+
+            <Snackbar
+            open={open}
+            autoHideDuration={2000}
+            onClose={() => setOpen(false)}
+            message="Car deleted"
+            />
+            </>
+         
         )
 
     }
