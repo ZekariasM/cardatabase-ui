@@ -26,3 +26,8 @@ registrationNumber: string;
 modelYear: number;
 price: number;
 }
+
+export type CarEntry = {
+    car: Car;
+    url: string
+}
