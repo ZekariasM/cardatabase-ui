@@ -12,7 +12,7 @@ type DialogFormProps = {
 export default function CarDialogContent({car, handleChange}: DialogFormProps) {
     return (
         <DialogContent>
-            <Stack>
+            <Stack spacing={2} mt={1}>
             <TextField label="Brand" name="brand" value={car.brand} onChange={handleChange}/>
             <TextField label="Brand" name="brand" value={car.brand} onChange={handleChange}/> 
             <TextField label="Model" name="model" value={car.model} onChange={handleChange}/> 
