@@ -13,7 +13,7 @@ export default function Carlist() {
     const [open, setOpen] = useState(false);
     const queryClient = useQueryClient();
 
-    const {data, error, isSuccess} = useQuery({
+    const {data, isError, isLoading, isSuccess} = useQuery({
         queryKey: ["cars"],
         queryFn: getCars
     });
@@ -67,12 +67,15 @@ export default function Carlist() {
   
     ]
 
-    if (!isSuccess) {
-        return <span>Loading...</span>
-    } else if (error) {
-        return <span>Error when fetching data....</span>
-    } else {
-        return (
+    
+  if (isLoading) {
+    return <span>Loading...</span>
+  }
+  else if (isError) {
+    return <span>Error when fetching cars...</span>
+  }
+  else if (isSuccess) {
+    return ( 
             <>
             <AddCar />
             <DataGrid
