@@ -6,6 +6,8 @@ import Snackbar from "@mui/material/Snackbar";
 import { useState } from "react";
 import AddCar from "./AddCar";
 import EditCar from "./EditCar";
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export default function Carlist() {
     const [open, setOpen] = useState(false);
@@ -28,12 +30,12 @@ export default function Carlist() {
     })
 
     const columns: GridColDef[] = [
-        {field: 'brand', headerName: 'Brand', width: 100},
-        {field: 'model', headerName: 'Model', width: 100},
-        {field: 'color', headerName: 'Color', width: 100},
-        {field: 'registrationNumber', headerName: 'Reg.nr.', width: 100},
-        {field: 'modelYear', headerName: 'Model Year', width: 100},
-        {field: 'price', headerName: 'Price', width: 100},
+        {field: 'brand', headerName: 'Brand', width: 125},
+        {field: 'model', headerName: 'Model', width: 125},
+        {field: 'color', headerName: 'Color', width: 125},
+        {field: 'registrationNumber', headerName: 'Reg.nr.', width: 125},
+        {field: 'modelYear', headerName: 'Model Year', width: 125},
+        {field: 'price', headerName: 'Price', width: 125},
         {
             field: 'edit',
             headerName: '',
@@ -52,14 +54,14 @@ export default function Carlist() {
             filterable: false,
             disableColumnMenu: true,
             renderCell: (params: GridCellParams) => (
-                <button
+                <IconButton aria-label="delete" size="small"
                 onClick={() => {
                     if (window.confirm(`Are you sure you want to delete ${params.row.brand} ${params.row.model}?`)) {
                         mutate(params.row._links.car.href);
                     }
                 }}>
-                    Delete
-                </button>
+                   <DeleteIcon fontSize="small" />
+                </IconButton>
             )
         }
   
