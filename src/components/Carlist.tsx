@@ -8,8 +8,13 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { deleteCar, getCars } from "../api/carapi";
 import AddCar from "./AddCar";
 import EditCar from "./EditCar";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
 
-export default function Carlist() {
+type CarlistProps = {
+    logOut?: () => void;
+}
+export default function Carlist({ logOut }: CarlistProps) {
     const [open, setOpen] = useState(false);
     const queryClient = useQueryClient();
     
@@ -78,7 +83,10 @@ export default function Carlist() {
     else if (isSuccess) {
         return (
             <>
-                <AddCar />
+                <Stack direction="row" alignItems="center" justifyContent="space-between">
+                    <AddCar />
+                    <Button onClick={logOut}>Log Out</Button>
+                </Stack>
                 <DataGrid
                     rows={data}
                     columns={columns}

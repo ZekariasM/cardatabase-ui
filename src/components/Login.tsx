@@ -2,6 +2,7 @@ import { useState } from "react";
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
+import Snackbar from "@mui/material/Snackbar";
 import Carlist from './Carlist';
 import axios from "axios";
 
@@ -17,10 +18,12 @@ export default function Login() {
     });
 
     const [isAuthenticated, setAuth] = useState(false);
+    const [open, setOpen] = useState(false);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setUser({...user, [event.target.name]: event.target.value});
     }
+
 
     const handleLogin = () => {
         axios.post(import.meta.env.VITE_API_URL + "/login", user, {
@@ -34,17 +37,28 @@ export default function Login() {
                 setAuth(true);
             }
         })
-        .catch(err => console.error(err));
+        .catch(() => setOpen(true));
+    }
+
+    const handleLogout = () => {
+        setAuth(false);
+        sessionStorage.setItem("jwt", "");
     }
 
     if (isAuthenticated) {
-        return<Carlist />;
+        return<Carlist logOut={handleLogout} />;
     } else {
         return(
         <Stack spacing={2} alignItems="center" mt={2}>
             <TextField name="username" label="Username" onChange={handleChange} />
             <TextField type="password" name="password" label="Password" onChange={handleChange}/>
             <Button variant="outlined" color="primary" onClick={handleLogin}>Login</Button>
+            <Snackbar 
+            open={open}
+            autoHideDuration={3000}
+            onClose={() => setOpen(false)}
+            message="Login failed: Check your usrname and password"
+             />
         </Stack>
     )}
 }
